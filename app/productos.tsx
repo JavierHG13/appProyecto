@@ -23,7 +23,7 @@ const Productos: React.FC = () => {
               nombre={item.nombre}
               descripcion={item.descripcion}
               precio={item.precio}
-              imagen={item.imagen[0]} // Muestra la primera imagen del producto
+              imagen={item.imagen[0].url}
               disponible={item.disponible}
             />
           )}
@@ -38,7 +38,7 @@ const Productos: React.FC = () => {
   return (
     <View style={styles.container}>
 
-      <Text>Vista de productos</Text>
+      {/*<Text>Vista de productos</Text>*/}
 
       {loading ? <Loader /> : LoadScreen()}
     </View>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 40,
     paddingHorizontal: 20,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#ffff',
   },
   title: {
     fontSize: 24,

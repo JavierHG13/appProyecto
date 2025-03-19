@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Button } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, Image, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+
 interface PropsCard {
-  _id: string,
+  _id: string;
   nombre: string;
   descripcion: string;
   precio: number;
@@ -14,30 +14,38 @@ interface PropsCard {
 export const CardProductos = (props: PropsCard) => {
   const router = useRouter();
 
-  const navegarADetalles = (id:string) => {
+  const navegarADetalles = (id: string) => {
     router.push(`/detalles/${id}`);
+  };
+
+  const agregarAlCarrito = () => {
+    console.log(`${props.nombre} ha sido agregado al carrito.`);
   };
 
   return (
     <View style={styles.card}>
       <Image
-        source={{ uri: props.imagen || 'https://via.placeholder.com/150' }}
+        source={{ uri: props.imagen }}
         style={styles.image}
       />
       <View style={styles.cardContent}>
-
         <Text style={styles.productName}>{props.nombre}</Text>
-
-
         <Text style={styles.productPrice}>Precio: {props.precio}</Text>
-
-        <Text style={[styles.productStatus, props.disponible ? styles.inStock : styles.outOfStock]}>
+        <Text
+          style={[styles.productStatus, props.disponible ? styles.inStock : styles.outOfStock]}>
           {props.disponible ? 'Disponible' : 'No disponible'}
         </Text>
       </View>
 
-      <Button title="Button" onPress={() => navegarADetalles(props._id)} />
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={() => navegarADetalles(props._id)}>
+          <Text style={styles.buttonText}>Detalles</Text>
+        </TouchableOpacity>
 
+        <TouchableOpacity style={styles.button} onPress={agregarAlCarrito}>
+          <Text style={styles.buttonText}>Agregar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -80,14 +88,22 @@ const styles = StyleSheet.create({
   outOfStock: {
     color: 'red',
   },
-  link: {
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     padding: 10,
-    backgroundColor: '#6200EE',
-    borderRadius: 8,
-    marginBottom: 15,
   },
-  linkText: {
+  button: {
+    backgroundColor: '#40a9ff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    width: '45%', // Asegura que los botones se ajusten al ancho de la fila
+    alignItems: 'center',
+  },
+  buttonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

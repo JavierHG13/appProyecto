@@ -1,48 +1,59 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Link } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
+import { useAuth } from '../context/AuthContext';
+
 
 function Header() {
   const [menuVisible, setMenuVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const toggleMenu = () => {
-    setMenuVisible(!menuVisible);
+  const { user, hasRole, isAuthenticated } = useAuth()
+
+
+  const toggleMenu = () =>{
+    setMenuVisible(!false)
+  }
+
+  const handleSearch = (text: string) => {
+    setSearchQuery(text);
+
   };
 
   return (
     <View style={styles.header}>
 
-      <TouchableOpacity onPress={toggleMenu}>
+      <TouchableOpacity onPress={ toggleMenu}>
         <FontAwesome name="bars" size={28} color="white" />
       </TouchableOpacity>
 
-      <Text style={styles.title}>Mi App</Text>
-
       <View style={styles.icons}>
-        
-        <TouchableOpacity>
-          <Link href="/carrito">
-            <FontAwesome name="shopping-cart" size={24} color="white" />
-          </Link>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Link href="/auth/login">
-            <FontAwesome name="user" size={24} color="white" />
-          </Link>
-        </TouchableOpacity>
-
-      </View>
-
-   
-      {menuVisible && (
-        <View style={styles.dropdownMenu}>
-          <Link href="/" style={styles.navLink}>Inicio</Link>
-          <Link href="/productos" style={styles.navLink}>Productos</Link>
-          <Link href="/contacto" style={styles.navLink}>Contacto</Link>
+        {/* Campo de búsqueda con icono */}
+        <View style={styles.searchContainer}>
+          <FontAwesome name="search" size={20} color="#ccc" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            value={searchQuery}
+            onChangeText={handleSearch}
+            placeholder="Buscar productos..."
+            placeholderTextColor="#ccc"
+          />
         </View>
-      )}
+
+        {/* Icono de usuario o login */}
+        <TouchableOpacity>
+          {isAuthenticated ? (
+            <Link href="/client/perfil">
+              <FontAwesome name="user" size={28} color="white" />
+            </Link>
+          ) : (
+            <Link href="/auth/login">
+              <FontAwesome name="sign-in" size={28} color="white" />
+            </Link>
+          )}
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -54,25 +65,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#6200EE',
     paddingHorizontal: 15,
     paddingVertical: 10,
     position: 'relative',
-  },
-  title: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
+    backgroundColor: '#1890ff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
   icons: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   dropdownMenu: {
     position: 'absolute',
     top: 50,
     left: 0,
     right: 0,
-    backgroundColor: '#6200EE',
+    backgroundColor: '#1890ff',
     paddingVertical: 10,
     zIndex: 999,
   },
@@ -81,5 +90,28 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingVertical: 5,
     paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingLeft: 10,
+    height: 40,
+    marginVertical: 10,
+    marginRight: 15,
+    width: '80%',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    height: '100%',
+    fontSize: 16,
   },
 });
